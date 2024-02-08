@@ -4,12 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Dividend;
+use App\Models\Stock;
 
 class DividendController extends Controller
 {
     public function index()
     {
         $dividends = Dividend::all();
+
+        return response()->json($dividends);
+    }
+
+    
+    public function stockDividend(Stock $stock) 
+    {
+        $dividends = $stock->dividends;
 
         return response()->json($dividends);
     }

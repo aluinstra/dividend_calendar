@@ -13,14 +13,16 @@ week maand jaar. home pagina -- af
 
 paymentsdates is required invullen dividendform -- af
 
-Seeder aanpassen ook voorgaande jaren.
+Seeder aanpassen ook voorgaande jaren. --af
 
 Maak show per stock
 -- ook weergave oude jaren dividend
 
-Home weergave dividend per week aanpassen.
+Home weergave dividend per week aanpassen. -- af
 
 Staafdiagram voor dividendweergave nu en voorgaande jaren.
 (chartJS original)
 
 maak github repo.
+
+DividendProcessor --> js bestand

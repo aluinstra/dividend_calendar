@@ -30,7 +30,6 @@ class StockController extends Controller
 
     public function show($id)
     {
-        $naam = "Andre";
 
         $stock = Stock::findOrFail($id);
 

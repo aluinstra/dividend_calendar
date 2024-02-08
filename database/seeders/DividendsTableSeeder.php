@@ -17,27 +17,37 @@ class DividendsTableSeeder extends Seeder
      */
     public function run(): void
     {
-       $stocks = Stock::all();
+        $stocks = Stock::all();
+
+        // Specify the number of years you want to seed
+        $numberOfYears = 2;
 
         foreach ($stocks as $stock) {
-            $count = Arr::random([1, 2, 4, 12]);
+             // Use a fixed starting date for consistency
+            $startDate = Carbon::parse('2024-01-06');
 
-         // Calculate the payment interval (in months) based on the count
-        $paymentInterval = 12 / $count;
+            // loop through each year
+            for ($year = 0; $year < $numberOfYears; $year++) {
 
-        for ($i = 0; $i < $count; $i++) {
-            // Calculate the payment date
-            $paymentDate = Carbon::now()->addMonths($i * $paymentInterval);
+                // Calculate the payment interval (in months) based on the count
+                $count = Arr::random([1, 2, 4, 12]);
+                $paymentInterval = 12 / $count;
 
-            // Create a new dividend with the calculated date
-            $dividend = Dividend::factory()->make([
-                'paymentDates' => $paymentDate,
-            ]);
+            for ($i = 0; $i < $count; $i++) {
+                // Calculate the payment date based on the start date
+                $paymentDate = $startDate->copy()->addMonths($i * $paymentInterval);
 
-            // Associate it with the stock
-            $stock->dividends()->save($dividend);
-        }
+                // Create a new dividend with the calculated date
+                $dividend = Dividend::factory()->make([
+                    'paymentDates' => $paymentDate,
+                ]);
 
+                // Associate it with the stock
+                $stock->dividends()->save($dividend);
+            }
+             // Move the start date to the next year
+                $startDate->addYear();
+            }
         }
     }
 }

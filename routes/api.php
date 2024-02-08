@@ -27,6 +27,7 @@ Route::put('/stocks/{id}', [StockController::class, 'update']);
 Route::delete('/stocks/{id}', [StockController::class, 'destroy']);
 
 Route::get('/dividends', [DividendController::class, 'index']);
+Route::get('/dividends/{stock}', [DividendController::class, 'stockDividend']);
 Route::post('/dividends', [DividendController::class, 'store']);
 Route::get('/dividends/{id}', [DividendController::class, 'show']);
 Route::put('/dividends/{id}', [DividendController::class, 'update']);

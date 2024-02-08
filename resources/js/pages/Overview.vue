@@ -56,10 +56,12 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { useStockstore } from "@/store/stocks.js";
 import { useDividendStore } from "@/store/dividends.js";
-import { ref, onMounted } from "vue";
 
+const router = useRouter();
 const stockStore = useStockstore();
 const dividendStore = useDividendStore();
 
@@ -106,6 +108,7 @@ function calculateTotalDividendsForYear(stockID) {
 const showStock = (stock) => {
     // Handle showing the details of the selected stock
     console.log("Show stock:", stock);
+    router.push({ name: "Show", params: { id: stock.id } });
 };
 
 const deleteStock = async (stock) => {

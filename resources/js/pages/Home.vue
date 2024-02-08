@@ -4,7 +4,7 @@
         <p>Today's dividend is: {{ currentDayDividend() }}</p>
         <p>This week's dividend is: {{ currentWeekDividend() }}</p>
         <p>This month's dividend is: {{ currentMonthDividend() }}</p>
-        <!-- <p>This year's is: {{ currentYearDividend() }}</p> -->
+        <p>This year's dividend is: {{ currentYearDividend() }}</p>
     </div>
 </template>
 
@@ -40,13 +40,16 @@ onMounted(async () => {
 });
 
 // Omzetten naar normale functie en opschonen vars
-Date.prototype.getWeek = function () {
-    var d = new Date(
+const getWeekNumber = function () {
+    const d = new Date(
         Date.UTC(this.getFullYear(), this.getMonth(), this.getDate())
     );
-    var dayNum = d.getUTCDay() || 7;
+
+    const dayNum = d.getUTCDay() || 7;
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-    var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+
     return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
 };
 
@@ -55,7 +58,7 @@ const currentDayDividend = () => {
     // Todo Intl.DateTimeFormat
 
     const currentDate = new Date().toISOString().split("T")[0];
-    console.log(currentDate);
+    // console.log(currentDate);
 
     if (isLoading.value) {
         // Data is still loading, return a loading message or some default value
@@ -63,18 +66,17 @@ const currentDayDividend = () => {
     }
 
     const dividends = dividendStore.getAllfromState().value;
-    console.log("div", dividends);
+    // console.log("div", dividends);
     if (!dividends || dividends.length === 0) {
         // No data or data is empty, handle this case
         return "No data available";
     }
 
-    for (let i = 0; i < dividends.length; i++) {
-        console.log(i, dividends[i].paymentDates, dividends[i].dividendYield);
-    }
+    // for (let i = 0; i < dividends.length; i++) {
+    //     console.log(i, dividends[i].paymentDates, dividends[i].dividendYield);
+    // }
 
     // Calculate and return the dividend for the day
-    // return 100;
     let dividendForCurrentDay = 0;
 
     for (let i = 0; i < dividends.length; i++) {
@@ -101,16 +103,13 @@ const currentWeekDividend = () => {
 
     // Get the current date
     const currentDate = new Date();
-    console.log(currentDate);
 
     const currentYear = currentDate.getFullYear();
 
     // Calculate the current week number
     const firstDayOfYear = new Date(currentYear, 0, 1);
     const daysPassed = Math.floor((currentDate - firstDayOfYear) / 86400000); // Milliseconds in a day
-    const currentWeekNumber = Math.ceil(
-        (daysPassed + firstDayOfYear.getDay() + 1) / 7
-    );
+    const currentWeekNumber = Math.ceil(daysPassed / 7);
 
     // Initialize dividend for the week
     let dividendForCurrentWeek = 0;
@@ -119,7 +118,7 @@ const currentWeekDividend = () => {
     for (let i = 0; i < dividends.length; i++) {
         const paymentDate = new Date(dividends[i].paymentDates);
         const paymentYear = paymentDate.getFullYear();
-        const paymentWeek = paymentDate.getWeek();
+        const paymentWeek = getWeekNumber.call(paymentDate);
 
         if (paymentYear === currentYear && paymentWeek === currentWeekNumber) {
             dividendForCurrentWeek += dividends[i].dividendYield;
@@ -138,7 +137,7 @@ const currentMonthDividend = () => {
 
     // Get the current date
     const currentDate = new Date().toISOString().split("T")[0];
-    console.log(currentDate);
+    // console.log(currentDate);
 
     // Extract the current year and month from currentDate
     const currentYear = new Date(currentDate).getFullYear();
@@ -159,5 +158,37 @@ const currentMonthDividend = () => {
     }
 
     return dividendForCurrentMonth;
+};
+
+const currentYearDividend = () => {
+    if (isLoading.value) {
+        // Data is still loading, return a loading message or some default value
+        return "Loading...";
+    }
+
+    const dividends = dividendStore.getAllfromState().value;
+
+    if (!dividends || dividends.length === 0) {
+        // No data or data is empty, handle this case
+        return "No data available";
+    }
+
+    // Get the current year
+    const currentYear = new Date().getFullYear();
+
+    // Initialize dividend for the year
+    let dividendForCurrentYear = 0;
+
+    // Calculate and return the dividend for the year based on your data
+    for (let i = 0; i < dividends.length; i++) {
+        const paymentDate = new Date(dividends[i].paymentDates);
+        const paymentYear = paymentDate.getFullYear();
+
+        if (paymentYear === currentYear) {
+            dividendForCurrentYear += dividends[i].dividendYield;
+        }
+    }
+
+    return dividendForCurrentYear;
 };
 </script>

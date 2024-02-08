@@ -8,14 +8,14 @@ export const useDividendStore = () => {
         try {
             const { data } = await axios.get("/api/dividends");
             state.value = data;
-            console.log("getdividends", data);
+            // console.log("getdividends", data);
         } catch (error) {
             console.error("Error retrieving dividend data:", error);
         }
     };
 
     const getAllfromState = () => {
-        console.log("state", state.value);
+        // console.log("state", state.value);
         return computed(() => {
             return state.value;
         });
@@ -27,6 +27,19 @@ export const useDividendStore = () => {
             return data;
         } catch (error) {
             console.error(`Error retrieving dividend with ID ${id}:`, error);
+        }
+    };
+
+    const getByStockId = async (stockId) => {
+        try {
+            const { data } = await axios.get(`/api/dividends/${stockId}`);
+            return data;
+        } catch (error) {
+            console.error(
+                `Error retrieving dividends for stock with ID ${stockId}:`,
+                error
+            );
+            throw error;
         }
     };
 
@@ -79,5 +92,6 @@ export const useDividendStore = () => {
         addToState,
         update,
         deleteFromDB,
+        getByStockId,
     };
 };
