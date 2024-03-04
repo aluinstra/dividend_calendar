@@ -23,7 +23,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useStockstore } from "../store/stocks.js";
-import { useDividendProcessor } from "../composables/DividendProcessor.js";
+import { useDividendProcessor } from "../composables/DividendProcessor";
 import Graph_1 from "./../components/Graph_1.vue";
 
 const route = useRoute();
