@@ -1,13 +1,8 @@
+import { isAxiosError } from "axios";
 import { ref, watchEffect } from "vue";
-import { useDividendStore } from "../store/dividends.js";
+import { useDividendStore } from "../store/dividends";
 
-interface Dividend {
-    dividendYield: number;
-    paymentDates: string;
-}
-
-
-type DividendData = [number,number][]
+type DividendData = [number, number][];
 
 export function useDividendProcessor(stockId: number) {
     const dividendStore = useDividendStore();
@@ -25,28 +20,27 @@ export function useDividendProcessor(stockId: number) {
         try {
             // Fetch and process dividend data
             const dividends = await dividendStore.getByStockId(stockId);
-            dividendData.value = transformDividends(dividends);
+            dividendData.value = dividends.map((dividend): [number, number] => {
+                const paymentYear = new Date(
+                    dividend.paymentDates
+                ).getFullYear();
+                return [dividend.dividendYield, paymentYear];
+            });
+
             // Calculate dividend for the current year
             totalDividendsCurrentYearForStock.value =
-                calculateTotalDividendsCurrentYear(dividendData);
+                calculateTotalDividendsCurrentYear();
         } catch (err) {
             console.error("Error fetching data for stockId:", err);
             // Set error state
-            error.value = err;
+            if (isAxiosError(err)) error.value = err;
         }
     });
 
-    const transformDividends = (dividends:Dividend[]):DividendData => {
-        return dividends.map((dividend) => {
-            const paymentYear = new Date(dividend.paymentDates).getFullYear();
-            return [dividend.dividendYield, paymentYear];
-        });
-    };
-
-    const calculateTotalDividendsCurrentYear = (dividendData) => {
+    const calculateTotalDividendsCurrentYear = () => {
         // Check if there is no dividend data
         if (!dividendData.value || dividendData.value.length === 0) {
-            return "No dividend data available";
+            return undefined;
         }
 
         // Get the current year
