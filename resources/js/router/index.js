@@ -4,6 +4,8 @@ import Home from "./../pages/Home.vue";
 import Overview from "./../pages/Overview.vue";
 import AddTo from "./../pages/AddTo.vue";
 import Show from "./../pages/Show.vue";
+import Edit from "./../pages/EditStock.vue";
+import Calendar from "../components/Calendar.vue";
 
 import Calculator from "./../components/Calculator.vue";
 
@@ -33,7 +35,16 @@ const routes = [
         component: Show,
         name: "Show",
     },
-    // Add more routes as needed
+    {
+        path: "/edit/:id",
+        component: Edit,
+        name: "Edit",
+    },
+    {
+        path: "/calendar",
+        component: Calendar,
+        name: "Calendar",
+    },
 ];
 
 export const router = createRouter({

@@ -6,16 +6,30 @@
             >
         </div>
         <div class="navbar-menu">
-            <div class="navbar-end">
-                <router-link class="navbar-item" :to="{ name: 'AddTo' }"
-                    >Add to...</router-link
-                >
-            </div>
-            <div class="navbar-end">
-                <router-link class="navbar-item" :to="{ name: 'Overview' }"
-                    >Overview</router-link
-                >
-            </div>
+            <router-link
+                class="navbar-item"
+                :to="{ name: 'Home' }"
+                active-class="active-link"
+                >Home</router-link
+            >
+            <router-link
+                class="navbar-item"
+                :to="{ name: 'AddTo' }"
+                active-class="active-link"
+                >Add to...</router-link
+            >
+            <router-link
+                class="navbar-item"
+                :to="{ name: 'Overview' }"
+                active-class="active-link"
+                >Overview</router-link
+            >
+            <router-link
+                class="navbar-item"
+                :to="{ name: 'Calendar' }"
+                active-class="active-link"
+                >Calendar</router-link
+            >
         </div>
     </nav>
 </template>
@@ -26,11 +40,38 @@
     padding: 10px 0;
     border-radius: 5px;
     width: 100%;
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
 }
 
-.navbar-brand,
+.navbar-menu {
+    display: flex;
+}
+
 .navbar-item {
     color: #fff;
-    margin-left: 10px;
+    margin: 0 15px;
+    text-decoration: none;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+.navbar-item:hover {
+    color: #dcdcdc;
+}
+
+.active-link {
+    color: #fff; /* Keep the text color white */
+}
+
+.active-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background-color: #fff;
+    border-radius: 2px;
 }
 </style>

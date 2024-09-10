@@ -1,21 +1,26 @@
 <template>
     <h1>Graph One</h1>
     <div v-if="dividendData && dividendData.length > 0">
-        <canvas id="myChart"></canvas>
+        <canvas ref="canvasElement"></canvas>
     </div>
     <div v-else>
         <p>Loading or no data available...</p>
     </div>
 </template>
 
-<script setup>
-import { onMounted, watch, defineProps } from "vue";
+<script setup lang="ts">
+import { onMounted, watch, defineProps, ref } from "vue";
 import Chart from "chart.js/auto";
+import { DividendData } from "../composables/DividendProcessor";
 
-const { dividendData } = defineProps(["dividendData"]);
+const props = defineProps<{ dividendData: DividendData[] }>();
+
+const { dividendData } = props;
 
 console.log("div-data", dividendData);
-let myChart;
+
+const canvasElement = ref<HTMLCanvasElement>();
+let myChart: Chart;
 
 onMounted(() => {
     // Render the chart
@@ -24,8 +29,8 @@ onMounted(() => {
 
 const renderChart = () => {
     console.log("Render", dividendData);
-    const ctx = document.getElementById("myChart").getContext("2d");
-
+    const ctx = canvasElement.value?.getContext("2d");
+    if (!ctx) return;
     myChart = new Chart(ctx, {
         type: "bar",
         data: {

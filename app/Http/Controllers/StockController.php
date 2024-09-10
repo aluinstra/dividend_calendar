@@ -16,11 +16,12 @@ class StockController extends Controller
 
     public function store(Request $request)
     {
-         $data = $request->validate([
-            'company' => 'required', 'regex:/^[A-Za-z0-9\s]+$/',
+        $data = $request->validate([
+            'company' => 'required',
+            'regex:/^[A-Za-z0-9\s]+$/',
             'price' => 'required|regex:/^\d+(\.\d{1,3})?$/',
             'quantity' => 'required|regex:/^[0-9]\d*$/',
-            'currency'=> 'required|in:$,€'
+            'currency' => 'required|in:$,€'
         ]);
 
         $stock = Stock::create($data);

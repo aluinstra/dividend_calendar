@@ -10,7 +10,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useDividendStore } from "@/store/dividends.js";
+import { useDividendStore } from "@/store/dividends";
 
 const dividendStore = useDividendStore();
 

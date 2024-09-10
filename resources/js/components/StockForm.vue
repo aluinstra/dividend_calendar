@@ -7,7 +7,7 @@
             <div class="label-input-container">
                 <label for="company">Company:</label>
                 <input
-                    type="company"
+                    type="text"
                     id="company"
                     v-model="stock.company"
                     :class="{ 'is-invalid': companyError }"
@@ -52,7 +52,7 @@
             </div>
             <div class="label-input-container">
                 <label for="quantity">Quantity:</label>
-                <input type="quantity" id="quantity" v-model="stock.quantity" />
+                <input type="number" id="quantity" v-model="stock.quantity" />
             </div>
             <button type="submit">Submit</button>
             <button type="button" @click="submitAndContinue">
@@ -63,79 +63,83 @@
     {{ companyError }}
 </template>
 
-<script setup>
-import { reactive, ref } from "vue";
+<script setup lang="ts">
+import { ref, defineProps, defineEmits } from "vue";
+import { Stock } from "../store/stocks";
 
-const stock = reactive({
-    company: "",
-    price: "€",
-    quantity: "",
-    currency: "€",
-});
+interface StockFormProps {
+    companyError: string;
+    stock: Stock;
+    showSubmitandContinue: boolean;
+}
 
-const priceInput = ref(null);
+const props = defineProps<StockFormProps>();
 
-defineProps({
-    companyError: String,
-});
+const emit = defineEmits<{
+    (event: "formSubmitted", payload: Stock): void;
+    (event: "submitAndContinue", payload: Stock): void;
+}>();
 
-const emit = defineEmits(["formSubmitted", "submitAndContinue"]);
+// const emit = defineEmits<{
+//     formSubmitted: [Stock];
+//     submitAndContinue: [Stock];
+// }>();
+
+// Make stock reactive and typed
+const stock = ref({ ...props.stock });
+
+// const emit = defineEmits(["formSubmitted", "submitAndContinue"]);
+// const stock = ref<Stock>(props.stock);
+// const priceInput = ref(null);
+
+const priceInput = ref<HTMLInputElement | null>(null);
 
 const submitForm = () => {
-    // Here you can handle form submission using Vue or send the data to your Laravel backend via AJAX.
-
-    const credentials = { ...stock };
-    credentials.price = credentials.price.slice(1, credentials.price.length);
+    const credentials = { ...stock.value };
+    credentials.price = credentials.price.slice(1);
     console.log("[StockForm] Credentials:", credentials);
 
     emit("formSubmitted", credentials);
 
-    // Clear the form fields after submission if desired
     Object.keys(stock).forEach((key) => {
-        stock[key] = "";
+        (stock.value as any)[key] = "";
     });
 };
 
 const submitAndContinue = () => {
-    const credentials = { ...stock };
-    credentials.price = credentials.price.slice(1, credentials.price.length);
+    const credentials = { ...stock.value };
+    credentials.price = credentials.price.slice(1);
 
     console.log("[StockForm] Credentials:", credentials);
 
     emit("submitAndContinue", credentials);
 
-    // Clear the form fields after submission if desired
     Object.keys(stock).forEach((key) => {
-        stock[key] = "";
+        (stock.value as any)[key] = "";
     });
 };
 
 const changeCurrency = () => {
-    if (stock.currency === "€") {
-        stock.price = "€" + stock.price.slice(1);
-    } else if (stock.currency == "$") {
-        stock.price = "$" + stock.price.slice(1);
+    if (stock.value.currency === "€") {
+        stock.value.price = "€" + stock.value.price.slice(1);
+    } else if (stock.value.currency == "$") {
+        stock.value.price = "$" + stock.value.price.slice(1);
     }
 };
 
-const handlePriceInput = (event) => {
+const handlePriceInput = (event: KeyboardEvent) => {
     console.log(priceInput);
-    // Ensure that the price always starts with a currency symbol (e.g., "$" or "€").
-    if (!stock.price.startsWith(stock.currency)) {
-        stock.price = stock.currency + stock.price;
+    if (!stock.value.price.startsWith(stock.value.currency)) {
+        stock.value.price = stock.value.currency + stock.value.price;
     }
 
-    // Handle left arrow key
     if (event.key === "ArrowLeft") {
-        // If the cursor is at index 1, keep it at index 1
-        if (priceInput.value.selectionStart === 1) {
+        if (priceInput.value?.selectionStart === 1) {
             priceInput.value.selectionStart = 1;
             event.preventDefault();
         }
     }
 
-    // Allow only valid characters: numbers and comma and exceptions e.g. arrows + tab
-    // Todo in Array
     const validCharacters = /^[0-9,.]*$/;
     if (
         !validCharacters.test(event.key) &&
@@ -156,7 +160,7 @@ const handlePriceInput = (event) => {
     border-radius: 5px;
     width: 300px;
     margin: 0 auto;
-    overflow: hidden; /* Added to hide any potential overflow */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -164,10 +168,10 @@ const handlePriceInput = (event) => {
 
 .header-bar {
     background-color: #007bff;
-    padding: 10px 0; /* Adjusted padding to add top and bottom padding only */
+    padding: 10px 0;
     border-radius: 5px 5px 0 0;
     width: 100%;
-    box-sizing: border-box; /* Added to include padding in width calculation */
+    box-sizing: border-box;
 }
 
 .header-text {
@@ -183,22 +187,20 @@ const handlePriceInput = (event) => {
     display: flex;
     align-items: center;
     margin-bottom: 0px;
-
-    /* margin-bottom: -20px; Adjust the value as per your preference */
 }
 
 .label-input-container label {
-    margin-right: 5px; /* Adjust the value as per your preference */
+    margin-right: 5px;
 }
 .label-input-container input,
 .label-input-container select {
     flex: 1;
-    margin-left: 5px; /* Adjust the value as per your preference */
+    margin-left: 5px;
 }
 
 .header-text,
 label {
-    margin-left: 10px; /* Adjust the value as per your preference */
+    margin-left: 10px;
 }
 
 label,
@@ -210,17 +212,17 @@ select {
 .button-container {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px; /* Adjust the value as per your preference */
+    margin-top: 10px;
 }
 
 button[type="submit"] {
     margin-left: 5px;
-    margin-bottom: 5px; /* Adjust the value as per your preference */
+    margin-bottom: 5px;
 }
 
 .invalid-feedback {
     color: red;
-    font-size: 14px; /* You can adjust the font size as needed */
+    font-size: 14px;
 }
 
 .is-invalid {

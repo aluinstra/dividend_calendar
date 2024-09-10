@@ -1,8 +1,7 @@
 <template>
     <h1>Show Stock</h1>
     <div v-if="stock">
-        <h2>{{ stock.name }}</h2>
-        <p>Symbol: {{ stock.company }}</p>
+        <p>Company: {{ stock.company }}</p>
         <p>Price: {{ stock.price }}</p>
         <p>Dividend: {{ totalDividendsCurrentYearForStock }}</p>
         <!-- Other stock information goes here -->
@@ -17,7 +16,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
-import { useStockstore } from "../store/stocks.js";
+import { useStockstore } from "../store/stocks";
 import { useDividendProcessor } from "../composables/DividendProcessor";
 import Graph_1 from "./../components/Graph_1.vue";
 
@@ -25,7 +24,7 @@ const route = useRoute();
 const stockStore = useStockstore();
 
 const stockId = Number(route.params.id);
-const stock = ref<{ name: string; company: string; price: number }>();
+const stock = ref<{ company: string; price: string }>();
 
 const { dividendData, totalDividendsCurrentYearForStock, error } =
     useDividendProcessor(stockId);
@@ -41,14 +40,11 @@ const { dividendData, totalDividendsCurrentYearForStock, error } =
 // Default to true until data is loaded
 const isLoading = ref(true);
 
-// Fetch stock data when the component is mounted
 onMounted(async () => {
     try {
         console.log("route", route.params.id);
 
-        // Fetch stock data
         stock.value = await stockStore.getByID(stockId);
-        // Data loading is complete
         isLoading.value = false;
     } catch (error) {
         console.log("Failed retrieving stocks:", error);

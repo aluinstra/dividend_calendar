@@ -58,8 +58,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useStockstore } from "@/store/stocks.js";
-import { useDividendStore } from "@/store/dividends.js";
+import { useStockstore } from "@/store/stocks";
+import { useDividendStore } from "@/store/dividends";
 
 const router = useRouter();
 const stockStore = useStockstore();

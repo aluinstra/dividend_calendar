@@ -77,20 +77,17 @@ const dividend = reactive({
 const emit = defineEmits(["formSubmitted"]);
 
 const addDateFields = () => {
-    dividend.paymentDates.push(null); // Add a new payment date
-    dividend.declarationDates.push(null); // Add a new declaration date
-    dividend.dividendYield.push(""); // Push an empty string for the next set
+    dividend.paymentDates.push(null);
+    dividend.declarationDates.push(null);
+    dividend.dividendYield.push("");
 };
 
 const submitForm = () => {
-    // Here you can handle form submission using Vue or send the data to your Laravel backend via AJAX.
-
     const credentials = { ...dividend };
     console.log("[DividendForm] Credentials:", credentials);
 
     emit("formSubmitted", credentials);
 
-    // Clear the form fields after submission if desired
     Object.keys(dividend).forEach((key) => {
         dividend[key] = "";
     });
@@ -103,7 +100,7 @@ const submitForm = () => {
     border-radius: 5px;
     width: 300px;
     margin: 0 auto;
-    overflow: hidden; /* Added to hide any potential overflow */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -111,10 +108,10 @@ const submitForm = () => {
 
 .header-bar {
     background-color: #007bff;
-    padding: 10px 0; /* Adjusted padding to add top and bottom padding only */
+    padding: 10px 0;
     border-radius: 5px 5px 0 0;
     width: 100%;
-    box-sizing: border-box; /* Added to include padding in width calculation */
+    box-sizing: border-box;
 }
 
 .header-text {
@@ -130,22 +127,20 @@ const submitForm = () => {
     display: flex;
     align-items: center;
     margin-bottom: 0px;
-
-    /* margin-bottom: -20px; Adjust the value as per your preference */
 }
 
 .label-input-container label {
-    margin-right: 5px; /* Adjust the value as per your preference */
+    margin-right: 5px;
 }
 .label-input-container input,
 .label-input-container select {
     flex: 1;
-    margin-left: 5px; /* Adjust the value as per your preference */
+    margin-left: 5px;
 }
 
 .header-text,
 label {
-    margin-left: 10px; /* Adjust the value as per your preference */
+    margin-left: 10px;
 }
 
 label,
@@ -157,12 +152,12 @@ select {
 .date-input {
     display: flex;
     align-items: center;
-    margin-bottom: 0px; /* Adjust this value as needed */
+    margin-bottom: 0px;
 }
 
 .date-input label {
-    margin-right: 10px; /* Adjust this value as needed */
-    width: 150px; /* Adjust this value as needed */
+    margin-right: 10px;
+    width: 150px;
 }
 
 .add-button {
@@ -178,17 +173,17 @@ select {
 .date-fields {
     display: flex;
     flex-direction: column;
-    margin-top: 5px; /* Adjust this value to control the spacing */
+    margin-top: 5px;
 }
 
 .button-container {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px; /* Adjust the value as per your preference */
+    margin-top: 10px;
 }
 
 button[type="submit"] {
     margin-left: 5px;
-    margin-bottom: 5px; /* Adjust the value as per your preference */
+    margin-bottom: 5px;
 }
 </style>
