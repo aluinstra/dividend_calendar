@@ -17,6 +17,7 @@ return new class extends Migration
             $table->char('currency', 1);
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

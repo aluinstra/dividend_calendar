@@ -8,12 +8,6 @@
         <div class="navbar-menu">
             <router-link
                 class="navbar-item"
-                :to="{ name: 'Home' }"
-                active-class="active-link"
-                >Home</router-link
-            >
-            <router-link
-                class="navbar-item"
                 :to="{ name: 'AddTo' }"
                 active-class="active-link"
                 >Add to...</router-link
